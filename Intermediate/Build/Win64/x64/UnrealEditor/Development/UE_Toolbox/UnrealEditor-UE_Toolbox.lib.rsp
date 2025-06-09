@@ -1,0 +1,12 @@
+/NOLOGO
+/errorReport:prompt
+/MACHINE:x64
+/SUBSYSTEM:WINDOWS
+/DEF
+/NAME:"UnrealEditor-UE_Toolbox.dll"
+/IGNORE:4221
+/NODEFAULTLIB
+"E:\StudyAndResearch\Intermediate\Build\Win64\x64\StudyAndResearchEditor\Development\UnrealEd\SharedPCH.UnrealEd.Cpp20.h.obj"
+"E:\StudyAndResearch\Plugins\UE_Toolbox\Intermediate\Build\Win64\x64\UnrealEditor\Development\UE_Toolbox\Module.UE_Toolbox.cpp.obj"
+"E:\StudyAndResearch\Plugins\UE_Toolbox\Intermediate\Build\Win64\x64\UnrealEditor\Development\UE_Toolbox\Default.rc2.res"
+/OUT:"E:\StudyAndResearch\Plugins\UE_Toolbox\Intermediate\Build\Win64\x64\UnrealEditor\Development\UE_Toolbox\UnrealEditor-UE_Toolbox.lib"

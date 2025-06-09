@@ -1,0 +1,10 @@
+{
+	"RemapUnityFiles": 
+	{
+		"Module.UE_Toolbox.cpp.obj": [
+			"UE_Toolbox.cpp.obj",
+			"UE_ToolboxCommands.cpp.obj",
+			"UE_ToolboxStyle.cpp.obj"
+		]
+	}
+}
