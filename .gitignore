@@ -37,3 +37,26 @@ __pycache__/
 # Ignore Unreal autosave and backup
 *.autosave
 *.backup
+
+# Build artifacts
+Binaries/
+Intermediate/
+DerivedDataCache/
+.vscode/
+.vs/
+*.VC.db
+*.sln
+*.opensdf
+*.sdf
+*.pdb
+*.obj
+*.exp
+*.lib
+*.ipch
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Engine user settings
+Saved/
