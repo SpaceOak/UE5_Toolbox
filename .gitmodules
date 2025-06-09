@@ -1,0 +1,3 @@
+[submodule "UE5_Python"]
+	path = UE5_Python
+	url = https://github.com/SpaceOak/UE5_Python.git
