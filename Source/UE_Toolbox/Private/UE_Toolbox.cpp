@@ -6,28 +6,79 @@
 #include "Misc/MessageDialog.h"
 #include "ToolMenus.h"
 
+#include "Interfaces/IPluginManager.h"
+#include "Misc/Paths.h"
+#include "Misc/FileHelper.h"
+#include "IPythonScriptPlugin.h"
 static const FName UE_ToolboxTabName("UE_Toolbox");
 
 #define LOCTEXT_NAMESPACE "FUE_ToolboxModule"
 
 void FUE_ToolboxModule::StartupModule()
 {
-	// This code will execute after your module is loaded into memory; the exact timing is specified in the .uplugin file per-module
-	
+	// Инициализация стиля и команд
 	FUE_ToolboxStyle::Initialize();
 	FUE_ToolboxStyle::ReloadTextures();
 
 	FUE_ToolboxCommands::Register();
-	
-	PluginCommands = MakeShareable(new FUICommandList);
 
+	PluginCommands = MakeShareable(new FUICommandList);
 	PluginCommands->MapAction(
 		FUE_ToolboxCommands::Get().PluginAction,
 		FExecuteAction::CreateRaw(this, &FUE_ToolboxModule::PluginButtonClicked),
 		FCanExecuteAction());
 
-	UToolMenus::RegisterStartupCallback(FSimpleMulticastDelegate::FDelegate::CreateRaw(this, &FUE_ToolboxModule::RegisterMenus));
+	UToolMenus::RegisterStartupCallback(
+		FSimpleMulticastDelegate::FDelegate::CreateRaw(this, &FUE_ToolboxModule::RegisterMenus)
+	);
+
+	// --- Python автоинициализация ---
+	TSharedPtr<IPlugin> Plugin = IPluginManager::Get().FindPlugin(TEXT("UE_Toolbox"));
+	if (!Plugin.IsValid())
+	{
+		UE_LOG(LogTemp, Error, TEXT("[UE_Toolbox] Plugin not found."));
+		return;
+	}
+
+	const FString PluginDir = Plugin->GetBaseDir();
+	const FString PythonDir = FPaths::Combine(PluginDir, TEXT("UE5_Python"));
+
+	const TArray<FString> StartupScripts = {
+		TEXT("__init__.py"),
+		TEXT("startup.py")
+	};
+
+	for (const FString& ScriptName : StartupScripts)
+	{
+		const FString ScriptPath = FPaths::Combine(PythonDir, ScriptName);
+
+		if (!FPaths::FileExists(ScriptPath))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("[UE_Toolbox] %s not found: %s"), *ScriptName, *ScriptPath);
+			continue;
+		}
+
+		FString ScriptContent;
+		if (!FFileHelper::LoadFileToString(ScriptContent, *ScriptPath))
+		{
+			UE_LOG(LogTemp, Error, TEXT("[UE_Toolbox] Failed to read: %s"), *ScriptPath);
+			continue;
+		}
+
+		if (IPythonScriptPlugin::Get())
+		{
+			IPythonScriptPlugin::Get()->ExecPythonCommand(*ScriptContent);
+			UE_LOG(LogTemp, Log, TEXT("[UE_Toolbox] Executed %s from: %s"), *ScriptName, *ScriptPath);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("[UE_Toolbox] Python plugin not available."));
+			break;
+		}
+	}
 }
+
+
 
 void FUE_ToolboxModule::ShutdownModule()
 {
