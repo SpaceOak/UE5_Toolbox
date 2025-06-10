@@ -12,6 +12,9 @@ public class UE_Toolbox : ModuleRules
 			new string[] {
 				
 				// ... add public include paths required here ...
+				"UMGEditor/Public",
+				"UMG/Public",
+				"Blutility/Public"
 			}
 			);
 				
@@ -43,7 +46,10 @@ public class UE_Toolbox : ModuleRules
 				"CoreUObject",
 				"Engine",
 				"Slate",
-				"SlateCore"
+				"SlateCore",
+				"Blutility",
+				"UMG",
+				"UMGEditor"
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);

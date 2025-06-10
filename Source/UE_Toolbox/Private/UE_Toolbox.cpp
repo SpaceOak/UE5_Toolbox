@@ -1,6 +1,9 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "UE_Toolbox.h"
+
+#include "EditorUtilitySubsystem.h"
+#include "EditorUtilityWidgetBlueprint.h"
 #include "UE_ToolboxStyle.h"
 #include "UE_ToolboxCommands.h"
 #include "Misc/MessageDialog.h"
@@ -79,6 +82,31 @@ void FUE_ToolboxModule::StartupModule()
 }
 
 
+void FUE_ToolboxModule::PluginButtonClicked()
+{
+	FString WidgetAssetPath = TEXT("/UE_Toolbox/UI/WBP_ToolboxMain.WBP_ToolboxMain");
+	UEditorUtilityWidgetBlueprint* WidgetBP = Cast<UEditorUtilityWidgetBlueprint>(
+		StaticLoadObject(UEditorUtilityWidgetBlueprint::StaticClass(), nullptr, *WidgetAssetPath));
+
+	if (WidgetBP)
+	{
+		UEditorUtilitySubsystem* EditorUtilitySubsystem = GEditor->GetEditorSubsystem<UEditorUtilitySubsystem>();
+		if (EditorUtilitySubsystem)
+		{
+			EditorUtilitySubsystem->SpawnAndRegisterTab(WidgetBP);
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Could not find Editor Utility Widget at path: %s"), *WidgetAssetPath);
+	}
+}
+
+
+
+
+
+
 
 void FUE_ToolboxModule::ShutdownModule()
 {
@@ -94,16 +122,7 @@ void FUE_ToolboxModule::ShutdownModule()
 	FUE_ToolboxCommands::Unregister();
 }
 
-void FUE_ToolboxModule::PluginButtonClicked()
-{
-	// Put your "OnButtonClicked" stuff here
-	FText DialogText = FText::Format(
-							LOCTEXT("PluginButtonDialogText", "Add code to {0} in {1} to override this button's actions"),
-							FText::FromString(TEXT("FUE_ToolboxModule::PluginButtonClicked()")),
-							FText::FromString(TEXT("UE_Toolbox.cpp"))
-					   );
-	FMessageDialog::Open(EAppMsgType::Ok, DialogText);
-}
+
 
 void FUE_ToolboxModule::RegisterMenus()
 {
