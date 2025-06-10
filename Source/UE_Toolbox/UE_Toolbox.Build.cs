@@ -10,6 +10,7 @@ public class UE_Toolbox : ModuleRules
 		
 		PublicIncludePaths.AddRange(
 			new string[] {
+				
 				// ... add public include paths required here ...
 			}
 			);
@@ -25,7 +26,7 @@ public class UE_Toolbox : ModuleRules
 		PublicDependencyModuleNames.AddRange(
 			new string[]
 			{
-				"Core", "CoreUObject", "Engine", "UnrealEd", "PythonScriptPlugin"
+				"Core", "CoreUObject", "Engine", "UnrealEd", "PythonScriptPlugin", "Blutility"
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);
@@ -42,7 +43,7 @@ public class UE_Toolbox : ModuleRules
 				"CoreUObject",
 				"Engine",
 				"Slate",
-				"SlateCore",
+				"SlateCore"
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);
