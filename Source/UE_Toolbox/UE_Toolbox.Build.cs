@@ -48,6 +48,7 @@ public class UE_Toolbox : ModuleRules
 				"SlateCore",
 				"Blutility",
 				"UMG",
+				"EditorSubsystem",
 				"UMGEditor"
 				// ... add private dependencies that you statically link with here ...    
 			}
