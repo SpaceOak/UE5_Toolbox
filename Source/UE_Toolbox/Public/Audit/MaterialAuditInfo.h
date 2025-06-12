@@ -21,8 +21,14 @@ struct FMaterialAuditInfo
 	UObject* Asset = nullptr;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	bool bHasErrors = false;
+	TEnumAsByte<EBlendMode> BlendMode;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	TArray<FString> Errors;
+	TEnumAsByte<EMaterialShadingModel> ShadingModel;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	int32 BasePassShaderCount = 0;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	bool bIsInstance = false;
 };
