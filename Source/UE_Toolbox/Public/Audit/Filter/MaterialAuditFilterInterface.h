@@ -13,9 +13,7 @@ class UMaterialAuditFilterInterface : public UInterface
 class IMaterialAuditFilterInterface
 {
 	GENERATED_BODY()
-
 public:
-	// Основная функция: проходит ли материал по фильтру
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Audit")
 	bool PassesFilter(const FMaterialAuditInfo& Info) const;
 };
