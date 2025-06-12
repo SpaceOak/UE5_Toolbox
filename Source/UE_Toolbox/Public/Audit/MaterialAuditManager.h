@@ -7,11 +7,8 @@
 #include "MaterialAuditManager.generated.h"
 
 /**
- * Менеджер аудита материалов:
- * - Хранит массив информации по материалам (Materials)
- * - Хранит массив активных фильтров (Filters)
- * - Позволяет добавлять тестовые материалы
- * - Позволяет фильтровать материалы по всем активным фильтрам
+ * Менеджер аудита материалов.
+ * Собирает все материалы и их инстансы, фильтрует по заданным фильтрам.
  */
 UCLASS(BlueprintType)
 class UE_TOOLBOX_API UMaterialAuditManager : public UObject
@@ -19,20 +16,21 @@ class UE_TOOLBOX_API UMaterialAuditManager : public UObject
 	GENERATED_BODY()
 
 public:
+	UMaterialAuditManager();
 
-	// Массив информации о материалах
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Material Audit")
+	// Массив информации о материалах (автоматически собирается)
+	UPROPERTY(BlueprintReadOnly, Category = "Material Audit")
 	TArray<FMaterialAuditInfo> Materials;
 
-	// Массив активных фильтров (любые наследники базового фильтра!)
+	// Активные фильтры (редактируются через UI)
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Instanced, Category = "Material Audit|Filters")
 	TArray<UMaterialAuditBaseFilter*> Filters;
 
-	// Добавить тестовую запись (например, из BP)
+	// Получить только материалы, проходящие все фильтры
 	UFUNCTION(BlueprintCallable, Category = "Material Audit")
-	void AddTestEntry(const FString& Name, const FString& Path);
+	TArray<FMaterialAuditInfo> GetFilteredMaterials();
 
-	// Отфильтровать все материалы через текущий набор фильтров
-	UFUNCTION(BlueprintCallable, Category = "Material Audit|Filters")
-	TArray<FMaterialAuditInfo> GetFilteredMaterials() const;
+private:
+	bool bIsInitialized = false;
+	void InitializeMaterials();
 };
