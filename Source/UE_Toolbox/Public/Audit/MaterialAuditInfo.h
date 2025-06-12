@@ -1,6 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
@@ -21,10 +19,10 @@ struct FMaterialAuditInfo
 	UObject* Asset = nullptr;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	TEnumAsByte<EBlendMode> BlendMode;
+	TEnumAsByte<EBlendMode> BlendMode = BLEND_Opaque;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	TEnumAsByte<EMaterialShadingModel> ShadingModel;
+	TEnumAsByte<EMaterialShadingModel> ShadingModel = MSM_DefaultLit;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	int32 BasePassShaderCount = 0;
