@@ -18,7 +18,7 @@ struct FMaterialAuditInfo
 	FString Path;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	TSoftObjectPtr<UMaterialInterface> Material;
+	UObject* Asset = nullptr;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	bool bHasErrors = false;
