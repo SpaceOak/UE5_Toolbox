@@ -59,7 +59,7 @@ TArray<FMaterialAuditInfo> UMaterialAuditManager::GetFilteredMaterials()
 		bool bPassesAll = true;
 		for (const UMaterialAuditBaseFilter* Filter : Filters)
 		{
-			if (Filter && !Filter->PassesFilter(Info))
+			if (Filter && IMaterialAuditFilterInterface::Execute_PassesFilter(Filter, Info))
 			{
 				bPassesAll = false;
 				break;
