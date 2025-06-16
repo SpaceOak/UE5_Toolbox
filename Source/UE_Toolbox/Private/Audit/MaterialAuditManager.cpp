@@ -2,71 +2,86 @@
 #include "AssetRegistry/AssetRegistryModule.h"
 #include "Materials/Material.h"
 #include "Materials/MaterialInstance.h"
+#include "Materials/MaterialInterface.h"
+#include "MaterialEditingLibrary.h"
+#include "MaterialStatsCommon.h"
+#include "MaterialStatsCommon.h"
+#include "MaterialEditor/PreviewMaterial.h"
 
 UMaterialAuditManager::UMaterialAuditManager()
 {
-	InitializeMaterials();
+    InitializeMaterials();
 }
 
 void UMaterialAuditManager::InitializeMaterials()
 {
-	if (bIsInitialized)
-		return;
+    if (bIsInitialized)
+        return;
 
-	Materials.Empty();
+    Materials.Empty();
 
-	FAssetRegistryModule& AssetRegistryModule = FModuleManager::LoadModuleChecked<FAssetRegistryModule>("AssetRegistry");
+    FAssetRegistryModule& AssetRegistryModule = FModuleManager::LoadModuleChecked<FAssetRegistryModule>("AssetRegistry");
 
-	// Новый UE5 способ!
-	TArray<FTopLevelAssetPath> ClassPaths = {
-		UMaterial::StaticClass()->GetClassPathName(),
-		UMaterialInstance::StaticClass()->GetClassPathName()
-	};
-	FARFilter Filter;
-	Filter.ClassPaths = ClassPaths;
-	Filter.bRecursiveClasses = true;
+    // Новый UE5 способ!
+    TArray<FTopLevelAssetPath> ClassPaths = {
+        UMaterial::StaticClass()->GetClassPathName(),
+        UMaterialInstance::StaticClass()->GetClassPathName()
+    };
+    FARFilter Filter;
+    Filter.ClassPaths = ClassPaths;
+    Filter.bRecursiveClasses = true;
 
-	TArray<FAssetData> AssetDataList;
-	AssetRegistryModule.Get().GetAssets(Filter, AssetDataList);
+    TArray<FAssetData> AssetDataList;
+    AssetRegistryModule.Get().GetAssets(Filter, AssetDataList);
 
-	for (const FAssetData& AssetData : AssetDataList)
-	{
-		FMaterialAuditInfo Info;
-		Info.Asset = AssetData.GetAsset();
-		Info.Path = AssetData.GetObjectPathString(); // Исправлено!
-		Info.Name = AssetData.AssetName.ToString();
+    for (const FAssetData& AssetData : AssetDataList)
+    {
+        FMaterialAuditInfo Info;
+        Info.Asset = AssetData.GetAsset();
+        Info.Path = AssetData.GetObjectPathString();
+        Info.Name = AssetData.AssetName.ToString();
 
-		if (UMaterialInterface* Mat = Cast<UMaterialInterface>(Info.Asset))
-		{
-			Info.BlendMode = Mat->GetBlendMode();
-			Info.bIsInstance = Mat->IsA<UMaterialInstance>();
-		}
+        if (UMaterialInterface* Mat = Cast<UMaterialInterface>(Info.Asset))
+        {
+            Info.BlendMode = Mat->GetBlendMode();
+            Info.bIsInstance = Mat->IsA<UMaterialInstance>();
 
-		Materials.Add(Info);
-	}
+            // Получаем статистику
+            FMaterialStatistics Stats = UMaterialEditingLibrary::GetStatistics(Mat);
+            Info.NumPixelShaderInstructions = Stats.NumPixelShaderInstructions;
+            Info.NumVertexShaderInstructions = Stats.NumVertexShaderInstructions;
+        }
+        else
+        {
+            Info.NumPixelShaderInstructions = -1;
+            Info.NumVertexShaderInstructions = -1;
+        }
 
-	bIsInitialized = true;
+        Materials.Add(Info);
+    }
+
+    bIsInitialized = true;
 }
 
 TArray<FMaterialAuditInfo> UMaterialAuditManager::GetFilteredMaterials()
 {
-	if (!bIsInitialized)
-		InitializeMaterials();
+    if (!bIsInitialized)
+        InitializeMaterials();
 
-	TArray<FMaterialAuditInfo> Result;
-	for (const FMaterialAuditInfo& Info : Materials)
-	{
-		bool bPassesAll = true;
-		for (const UMaterialAuditBaseFilter* Filter : Filters)
-		{
-			if (Filter && IMaterialAuditFilterInterface::Execute_PassesFilter(Filter, Info))
-			{
-				bPassesAll = false;
-				break;
-			}
-		}
-		if (bPassesAll)
-			Result.Add(Info);
-	}
-	return Result;
+    TArray<FMaterialAuditInfo> Result;
+    for (const FMaterialAuditInfo& Info : Materials)
+    {
+        bool bPassesAll = true;
+        for (const UMaterialAuditBaseFilter* Filter : Filters)
+        {
+            if (Filter && !IMaterialAuditFilterInterface::Execute_PassesFilter(Filter, Info))
+            {
+                bPassesAll = false;
+                break;
+            }
+        }
+        if (bPassesAll)
+            Result.Add(Info);
+    }
+    return Result;
 }

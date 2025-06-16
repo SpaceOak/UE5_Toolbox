@@ -9,24 +9,25 @@ struct FMaterialAuditInfo
 {
 	GENERATED_BODY()
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	FString Name;
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	FString Path;
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(BlueprintReadOnly)
 	UObject* Asset = nullptr;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	TEnumAsByte<EBlendMode> BlendMode = BLEND_Opaque;
+	UPROPERTY(BlueprintReadOnly)
+	FString Name;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	TEnumAsByte<EMaterialShadingModel> ShadingModel = MSM_DefaultLit;
+	UPROPERTY(BlueprintReadOnly)
+	FString Path;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	int32 BasePassShaderCount = 0;
+	UPROPERTY(BlueprintReadOnly)
+	TEnumAsByte<EBlendMode> BlendMode;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(BlueprintReadOnly)
 	bool bIsInstance = false;
+
+	UPROPERTY(BlueprintReadOnly)
+	int32 NumPixelShaderInstructions = -1;
+
+	UPROPERTY(BlueprintReadOnly)
+	int32 NumVertexShaderInstructions = -1;
 };
+
