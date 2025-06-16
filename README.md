@@ -47,7 +47,7 @@ it’s already saved me hours on client projects and content cleanups.
 
 ## 📺 Demo
 
-[![Demo Video]([https://img.youtube.com/vi/YOUR_DEMO_VIDEO_ID/0.jpg](https://www.youtube.com/watch?v=0ztCDHkvbMg))](Demo)
+[![Demo Video][([https://img.youtube.com/vi/YOUR_DEMO_VIDEO_ID/0.jpg](https://www.youtube.com/watch?v=0ztCDHkvbMg))](Demo)](https://www.youtube.com/watch?v=0ztCDHkvbMg)
 
 ---
 
