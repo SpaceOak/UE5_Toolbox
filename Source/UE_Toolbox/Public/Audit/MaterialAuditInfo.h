@@ -1,9 +1,11 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
+#include "Materials/Material.h"
+#include "Materials/MaterialInstance.h"
+#include "Materials/MaterialInterface.h"
+#include "MaterialEditingLibrary.h"
 #include "MaterialAuditInfo.generated.h"
 
 USTRUCT(BlueprintType)
@@ -11,24 +13,21 @@ struct FMaterialAuditInfo
 {
 	GENERATED_BODY()
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	FString Name;
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	FString Path;
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(BlueprintReadOnly)
 	UObject* Asset = nullptr;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(BlueprintReadOnly)
+	FString Name;
+
+	UPROPERTY(BlueprintReadOnly)
+	FString Path;
+
+	UPROPERTY(BlueprintReadOnly)
 	TEnumAsByte<EBlendMode> BlendMode;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	TEnumAsByte<EMaterialShadingModel> ShadingModel;
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	int32 BasePassShaderCount = 0;
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(BlueprintReadOnly)
 	bool bIsInstance = false;
+
+	UPROPERTY(BlueprintReadOnly)
+	FMaterialStatistics Stats;
 };

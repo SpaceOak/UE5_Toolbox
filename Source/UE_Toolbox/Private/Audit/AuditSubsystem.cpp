@@ -1,18 +1,21 @@
 ﻿#include "Audit/AuditSubsystem.h"
-#include "Audit/MaterialAuditInfoObject.h"
-#include "UObject/ConstructorHelpers.h"
-#include "Engine/World.h"
+#include "Audit/MaterialAuditManager.h"
 
-UMaterialAuditInfoObject* UAuditSubsystem::AddMaterialTestEntry(const FString& Name, const FString& Path)
+void UAuditSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
-	UMaterialAuditInfoObject* InfoObject = NewObject<UMaterialAuditInfoObject>(this);
-	InfoObject->Data.Name = Name;
-	InfoObject->Data.Path = Path;
-	MaterialAuditObjects.Add(InfoObject);
-	return InfoObject;
+	Super::Initialize(Collection);
+
+	// Создаём менеджер как UObject
+	if (!MaterialAuditManager)
+	{
+		MaterialAuditManager = NewObject<UMaterialAuditManager>(this, UMaterialAuditManager::StaticClass());
+		// Теперь он будет жить столько, сколько живёт эта сабсистема
+	}
 }
 
-void UAuditSubsystem::ClearMaterialAudits()
+void UAuditSubsystem::Deinitialize()
 {
-	MaterialAuditObjects.Empty();
+	// Очищаем ссылку (не обязательно, просто good practice)
+	MaterialAuditManager = nullptr;
+	Super::Deinitialize();
 }

@@ -49,7 +49,9 @@ public class UE_Toolbox : ModuleRules
 				"Blutility",
 				"UMG",
 				"EditorSubsystem",
-				"UMGEditor"
+				"UMGEditor", 
+				"MaterialEditor",
+				"MaterialUtilities"
 				// ... add private dependencies that you statically link with here ...    
 			}
 		);

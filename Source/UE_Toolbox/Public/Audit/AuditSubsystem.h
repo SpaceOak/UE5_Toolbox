@@ -1,23 +1,32 @@
 ﻿#pragma once
 
 #include "CoreMinimal.h"
-#include "EditorSubsystem.h"
-#include "MaterialAuditInfoObject.h"
+#include "EditorSubsystem.h" // или другая, если у тебя кастомная
+#include "Audit/MaterialAuditManager.h"
 #include "AuditSubsystem.generated.h"
 
+/**
+ * Центральная сабсистема для аудита материалов
+ */
 UCLASS()
 class UE_TOOLBOX_API UAuditSubsystem : public UEditorSubsystem
 {
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(BlueprintReadWrite, Category = "Audit|Materials")
-	TArray<UMaterialAuditInfoObject*> MaterialAuditObjects;
+	// Получить менеджер аудита
+	UFUNCTION(BlueprintCallable, Category = "Material Audit")
+	UMaterialAuditManager* GetMaterialAuditManager() const { return MaterialAuditManager; }
 
-	// Новый метод для добавления тестового объекта
-	UFUNCTION(BlueprintCallable, Category = "Audit|Materials")
-	UMaterialAuditInfoObject* AddMaterialTestEntry(const FString& Name, const FString& Path);
+protected:
+	// Инициализация — тут создаём менеджер
+	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 
-	UFUNCTION(BlueprintCallable, Category = "Audit|Materials")
-	void ClearMaterialAudits();
+	// Опционально: деинициализация (очистка)
+	virtual void Deinitialize() override;
+
+private:
+	// Храним менеджер как сабобъект
+	UPROPERTY()
+	UMaterialAuditManager* MaterialAuditManager = nullptr;
 };
