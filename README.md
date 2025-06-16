@@ -79,7 +79,7 @@ If you use this in your workflow or want to help develop it further, feel free t
 
 ## ⚡ Credits
 
-Created by [YOUR_NAME](https://www.linkedin.com/in/YOUR_PROFILE)  
+Created by [AzureWhale](https://www.linkedin.com/in/denis-dubin/)
 Inspired by everyday pain in ArchViz and UE5 tech-art.
 
 ---
