@@ -5,7 +5,6 @@
 #include "Materials/MaterialInterface.h"
 #include "MaterialEditingLibrary.h"
 #include "MaterialStatsCommon.h"
-#include "MaterialStatsCommon.h"
 #include "MaterialEditor/PreviewMaterial.h"
 
 UMaterialAuditManager::UMaterialAuditManager()
@@ -46,6 +45,22 @@ void UMaterialAuditManager::InitializeMaterials()
             Info.BlendMode = Mat->GetBlendMode();
             Info.bIsInstance = Mat->IsA<UMaterialInstance>();
             Info.Stats = UMaterialEditingLibrary::GetStatistics(Mat);
+
+            // --- Домен и шейдинг модел ---
+            if (UMaterial* BaseMat = Cast<UMaterial>(Mat))
+            {
+                Info.MaterialDomain = BaseMat->MaterialDomain;
+                Info.ShadingModel = BaseMat->GetShadingModels().GetFirstShadingModel();
+            }
+            else if (UMaterialInstance* Inst = Cast<UMaterialInstance>(Mat))
+            {
+                // Для инстансов тянем из Parent
+                if (UMaterial* ParentMat = Inst->GetMaterial())
+                {
+                    Info.MaterialDomain = ParentMat->MaterialDomain;
+                    Info.ShadingModel = ParentMat->GetShadingModels().GetFirstShadingModel();
+                }
+            }
         }
         else
         {

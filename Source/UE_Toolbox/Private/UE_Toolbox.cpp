@@ -84,7 +84,7 @@ void FUE_ToolboxModule::StartupModule()
 
 void FUE_ToolboxModule::PluginButtonClicked()
 {
-	FString WidgetAssetPath = TEXT("/UE_Toolbox/UI/WBP_ToolboxMain.WBP_ToolboxMain");
+	FString WidgetAssetPath = TEXT("/UE_Toolbox/UI/W_Audit_Materials.W_Audit_Materials");
 	UEditorUtilityWidgetBlueprint* WidgetBP = Cast<UEditorUtilityWidgetBlueprint>(
 		StaticLoadObject(UEditorUtilityWidgetBlueprint::StaticClass(), nullptr, *WidgetAssetPath));
 
