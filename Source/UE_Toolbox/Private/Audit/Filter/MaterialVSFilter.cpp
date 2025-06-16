@@ -4,9 +4,10 @@
 
 bool UMaterialVertexInstructionCountFilter::PassesFilter_Implementation(const FMaterialAuditInfo& Info) const
 {
-	if (Info.NumVertexShaderInstructions < 0)
+	// Пропускаем, если статистика невалидна
+	if (Info.Stats.NumVertexShaderInstructions < 0)
 		return false;
 
-	return Info.NumVertexShaderInstructions >= MinVertexInstructions &&
-		   Info.NumVertexShaderInstructions <= MaxVertexInstructions;
+	return Info.Stats.NumVertexShaderInstructions >= MinVertexInstructions &&
+		   Info.Stats.NumVertexShaderInstructions <= MaxVertexInstructions;
 }

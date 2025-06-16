@@ -6,6 +6,7 @@
 #include "MaterialAuditInfo.h"
 #include "MaterialAuditInfoObject.generated.h"
 
+
 UCLASS(BlueprintType)
 class UE_TOOLBOX_API UMaterialAuditInfoObject : public UObject
 {

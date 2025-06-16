@@ -1,12 +1,11 @@
 ﻿#include "Audit/Filter/MaterialPSFilter.h"
 
-
 bool UMaterialPixelInstructionCountFilter::PassesFilter_Implementation(const FMaterialAuditInfo& Info) const
 {
-	// -1 = unknown, пропускаем если невалидно
-	if (Info.NumPixelShaderInstructions < 0)
+	// Пропускаем, если статистика невалидна
+	if (Info.Stats.NumPixelShaderInstructions < 0)
 		return false;
 
-	return Info.NumPixelShaderInstructions >= MinPixelInstructions &&
-		   Info.NumPixelShaderInstructions <= MaxPixelInstructions;
+	return Info.Stats.NumPixelShaderInstructions >= MinPixelInstructions &&
+		   Info.Stats.NumPixelShaderInstructions <= MaxPixelInstructions;
 }

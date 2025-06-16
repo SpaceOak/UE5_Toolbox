@@ -2,6 +2,10 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
+#include "Materials/Material.h"
+#include "Materials/MaterialInstance.h"
+#include "Materials/MaterialInterface.h"
+#include "MaterialEditingLibrary.h"
 #include "MaterialAuditInfo.generated.h"
 
 USTRUCT(BlueprintType)
@@ -25,9 +29,5 @@ struct FMaterialAuditInfo
 	bool bIsInstance = false;
 
 	UPROPERTY(BlueprintReadOnly)
-	int32 NumPixelShaderInstructions = -1;
-
-	UPROPERTY(BlueprintReadOnly)
-	int32 NumVertexShaderInstructions = -1;
+	FMaterialStatistics Stats;
 };
-

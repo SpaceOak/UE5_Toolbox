@@ -45,16 +45,11 @@ void UMaterialAuditManager::InitializeMaterials()
         {
             Info.BlendMode = Mat->GetBlendMode();
             Info.bIsInstance = Mat->IsA<UMaterialInstance>();
-
-            // Получаем статистику
-            FMaterialStatistics Stats = UMaterialEditingLibrary::GetStatistics(Mat);
-            Info.NumPixelShaderInstructions = Stats.NumPixelShaderInstructions;
-            Info.NumVertexShaderInstructions = Stats.NumVertexShaderInstructions;
+            Info.Stats = UMaterialEditingLibrary::GetStatistics(Mat);
         }
         else
         {
-            Info.NumPixelShaderInstructions = -1;
-            Info.NumVertexShaderInstructions = -1;
+            Info.Stats = FMaterialStatistics();
         }
 
         Materials.Add(Info);
