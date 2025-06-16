@@ -1,15 +1,19 @@
 ﻿#pragma once
 
-#include "Audit/Filter/MaterialAuditBaseFilter.h"
+#include "MaterialAuditBaseFilter.h"
+#include "Materials/Material.h"
 #include "MaterialBlendModeFilter.generated.h"
 
-UCLASS(EditInlineNew, DefaultToInstanced, BlueprintType)
+UCLASS(EditInlineNew)
 class UMaterialBlendModeFilter : public UMaterialAuditBaseFilter
 {
-	GENERATED_BODY()
+    GENERATED_BODY()
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Audit")
-	TEnumAsByte<EBlendMode> BlendMode;
+    UPROPERTY(EditAnywhere, Category = "Material Audit")
+    TEnumAsByte<EBlendMode> BlendMode = BLEND_Opaque;
 
-	virtual bool PassesFilter_Implementation(const FMaterialAuditInfo& Info) const override;
+    virtual bool PassesFilter_Implementation(const FMaterialAuditInfo& Info) const override
+    {
+        return Info.BlendMode == BlendMode;
+    }
 };

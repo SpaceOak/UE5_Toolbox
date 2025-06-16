@@ -18,5 +18,13 @@ public:
 	UPROPERTY(EditAnywhere, Category = "InstructionCount")
 	int32 MaxVertexInstructions = 300;
 
-	virtual bool PassesFilter_Implementation(const FMaterialAuditInfo& Info) const override;
+	virtual bool PassesFilter_Implementation(const FMaterialAuditInfo& Info) const override
+	{
+		// Пропускаем, если статистика невалидна
+		if (Info.Stats.NumVertexShaderInstructions < 0)
+			return false;
+
+		return Info.Stats.NumVertexShaderInstructions >= MinVertexInstructions &&
+			   Info.Stats.NumVertexShaderInstructions <= MaxVertexInstructions;
+	}
 };
