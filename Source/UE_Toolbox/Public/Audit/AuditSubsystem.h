@@ -18,12 +18,16 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Material Audit")
 	UMaterialAuditManager* GetMaterialAuditManager() const { return MaterialAuditManager; }
 
+	UFUNCTION()
+	void Register();
+	
 protected:
 	// Инициализация — тут создаём менеджер
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 
 	// Опционально: деинициализация (очистка)
 	virtual void Deinitialize() override;
+
 
 private:
 	// Храним менеджер как сабобъект

@@ -19,3 +19,9 @@ void UAuditSubsystem::Deinitialize()
 	MaterialAuditManager = nullptr;
 	Super::Deinitialize();
 }
+
+void UAuditSubsystem::Register()
+{
+	UE_LOG(LogTemp, Log, TEXT("[AuditSubsystem] Register() called"));
+	// Здесь можешь запускать обработку ассетов, сканирование, и т.д.
+}

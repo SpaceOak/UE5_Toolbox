@@ -30,7 +30,19 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Material Audit")
 	TArray<FMaterialAuditInfo> GetFilteredMaterials();
 
-private:
-	bool bIsInitialized = false;
+	static UMaterialAuditManager* Get();
+
+	void Initialize();
+
 	void InitializeMaterials();
+	
+
+	void SetAnalyzeCurrentLevelOnly(bool bOnlyCurrentLevel);
+	
+
+protected:
+	bool bAnalyzeCurrentLevelOnly = false;
+	bool bIsInitialized = false;
+	static UMaterialAuditManager* Instance;
+	
 };

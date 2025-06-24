@@ -9,8 +9,30 @@
 
 UMaterialAuditManager::UMaterialAuditManager()
 {
-    InitializeMaterials();
+   // InitializeMaterials();
 }
+
+
+
+
+UMaterialAuditManager* UMaterialAuditManager::Instance = nullptr;
+
+UMaterialAuditManager* UMaterialAuditManager::Get()
+{
+    if (!Instance)
+    {
+        Instance = NewObject<UMaterialAuditManager>();
+        Instance->AddToRoot(); // защита от GC
+    }
+    return Instance;
+}
+
+void UMaterialAuditManager::Initialize()
+{
+    UE_LOG(LogTemp, Log, TEXT("[MaterialAuditManager] Initialized"));
+}
+
+
 
 void UMaterialAuditManager::InitializeMaterials()
 {
@@ -36,6 +58,13 @@ void UMaterialAuditManager::InitializeMaterials()
     for (const FAssetData& AssetData : AssetDataList)
     {
         FMaterialAuditInfo Info;
+
+        if (!AssetData.IsValid())
+        {
+            UE_LOG(LogTemp, Warning, TEXT("[MaterialAuditManager] Invalid AssetData encountered"));
+            continue;
+        }
+        
         Info.Asset = AssetData.GetAsset();
         Info.Path = AssetData.GetObjectPathString();
         Info.Name = AssetData.AssetName.ToString();
@@ -71,6 +100,11 @@ void UMaterialAuditManager::InitializeMaterials()
     }
 
     bIsInitialized = true;
+}
+
+void UMaterialAuditManager::SetAnalyzeCurrentLevelOnly(bool bOnlyCurrentLevel)
+{
+    bAnalyzeCurrentLevelOnly = bOnlyCurrentLevel;
 }
 
 TArray<FMaterialAuditInfo> UMaterialAuditManager::GetFilteredMaterials()
