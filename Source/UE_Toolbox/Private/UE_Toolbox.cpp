@@ -8,6 +8,9 @@
 #include "UE_ToolboxCommands.h"
 #include "Misc/MessageDialog.h"
 #include "ToolMenus.h"
+#include "ToolModes/ToolModeRegistry.h"
+#include "ToolModes/MaterialAuditToolMode.h"
+
 
 #include "Interfaces/IPluginManager.h"
 #include "Misc/Paths.h"
@@ -79,6 +82,13 @@ void FUE_ToolboxModule::StartupModule()
 			break;
 		}
 	}
+
+
+	FToolModeRegistry::Register("MaterialAudit", []()
+	{
+		return MakeShared<FMaterialAuditToolMode>();
+	});
+	
 }
 
 
