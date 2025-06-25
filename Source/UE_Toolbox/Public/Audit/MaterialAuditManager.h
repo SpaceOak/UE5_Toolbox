@@ -1,15 +1,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UObject/NoExportTypes.h"
-#include "Audit/MaterialAuditInfo.h"
-#include "Audit/Filter/MaterialAuditBaseFilter.h"
+#include "UObject/Object.h"
+#include "MaterialAuditInfo.h"
+#include "Filter/MaterialAuditBaseFilter.h"
 #include "MaterialAuditManager.generated.h"
 
-/**
- * Менеджер аудита материалов.
- * Собирает все материалы и их инстансы, фильтрует по заданным фильтрам.
- */
 UCLASS(BlueprintType)
 class UE_TOOLBOX_API UMaterialAuditManager : public UObject
 {
@@ -18,34 +14,40 @@ class UE_TOOLBOX_API UMaterialAuditManager : public UObject
 public:
 	UMaterialAuditManager();
 
-	// Массив информации о материалах (автоматически собирается)
-	UPROPERTY(BlueprintReadOnly, Category = "Material Audit")
-	TArray<FMaterialAuditInfo> Materials;
-
-	// Активные фильтры (редактируются через UI)
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Instanced, Category = "Material Audit|Filters")
-	TArray<UMaterialAuditBaseFilter*> Filters;
-
-	// Получить только материалы, проходящие все фильтры
 	UFUNCTION(BlueprintCallable, Category = "Material Audit")
-	TArray<FMaterialAuditInfo> GetFilteredMaterials();
-
-	static UMaterialAuditManager* Get();
-
 	void Initialize();
 
 	UFUNCTION(BlueprintCallable, Category = "Material Audit")
 	void InitializeMaterials();
-	
+
 	UFUNCTION(BlueprintCallable, Category = "Material Audit")
 	void SetAnalyzeCurrentLevelOnly(bool bOnlyCurrentLevel);
 
 	UFUNCTION(BlueprintCallable, Category = "Material Audit")
-	void Destroy();
+	static UMaterialAuditManager* Get();
 
-protected:
+	UFUNCTION(BlueprintCallable, Category = "Material Audit")
+	static void Destroy();
+
+	UFUNCTION(BlueprintCallable, Category = "Material Audit")
+	TArray<FMaterialAuditInfo> GetFilteredMaterials();
+	
+	UFUNCTION(BlueprintCallable, Category = "Material Audit")
+	void ResetAndReinitialize();
+
+private:
+	void ScanProjectMaterials();
+	void ScanLevelMaterials();
+
+private:
+	static UMaterialAuditManager* Instance;
+
+	UPROPERTY()
+	TArray<FMaterialAuditInfo> Materials;
+
+	UPROPERTY(EditAnywhere, Instanced, Category = "Material Audit")
+	TArray<UMaterialAuditBaseFilter*> Filters;
+
 	bool bAnalyzeCurrentLevelOnly = false;
 	bool bIsInitialized = false;
-	static UMaterialAuditManager* Instance;
-	
 };
