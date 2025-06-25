@@ -34,11 +34,14 @@ public:
 
 	void Initialize();
 
+	UFUNCTION(BlueprintCallable, Category = "Material Audit")
 	void InitializeMaterials();
 	
-
+	UFUNCTION(BlueprintCallable, Category = "Material Audit")
 	void SetAnalyzeCurrentLevelOnly(bool bOnlyCurrentLevel);
-	
+
+	UFUNCTION(BlueprintCallable, Category = "Material Audit")
+	void Destroy();
 
 protected:
 	bool bAnalyzeCurrentLevelOnly = false;

@@ -29,7 +29,8 @@ UMaterialAuditManager* UMaterialAuditManager::Get()
 
 void UMaterialAuditManager::Initialize()
 {
-    UE_LOG(LogTemp, Log, TEXT("[MaterialAuditManager] Initialized"));
+    UE_LOG(LogTemp, Log, TEXT("MaterialAuditManager initialized."));
+    bIsInitialized = true;
 }
 
 
@@ -105,6 +106,15 @@ void UMaterialAuditManager::InitializeMaterials()
 void UMaterialAuditManager::SetAnalyzeCurrentLevelOnly(bool bOnlyCurrentLevel)
 {
     bAnalyzeCurrentLevelOnly = bOnlyCurrentLevel;
+}
+
+void UMaterialAuditManager::Destroy()
+{
+    if (Instance)
+    {
+        Instance->RemoveFromRoot();
+        Instance = nullptr;
+    }
 }
 
 TArray<FMaterialAuditInfo> UMaterialAuditManager::GetFilteredMaterials()
