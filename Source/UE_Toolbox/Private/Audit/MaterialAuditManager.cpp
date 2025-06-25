@@ -79,8 +79,14 @@ void UMaterialAuditManager::ScanProjectMaterials()
     AssetRegistryModule.Get().GetAssets(Filter, AssetDataList);
     UE_LOG(LogTemp, Log, TEXT("[MaterialAudit] Found %d material assets in project"), AssetDataList.Num());
 
-    for (const FAssetData& AssetData : AssetDataList)
+    FScopedSlowTask SlowTask(AssetDataList.Num(), FText::FromString(TEXT("Scanning project materials...")));
+    SlowTask.MakeDialog(true);
+
+    for (int32 i = 0; i < AssetDataList.Num(); ++i)
     {
+        SlowTask.EnterProgressFrame(1.f);
+
+        const FAssetData& AssetData = AssetDataList[i];
         if (!AssetData.IsValid())
             continue;
 
@@ -151,10 +157,19 @@ void UMaterialAuditManager::ScanLevelMaterials()
         }
     }
 
-    UE_LOG(LogTemp, Log, TEXT("[MaterialAudit] Found %d unique materials in level"), UniqueMaterials.Num());
+    TArray<UMaterialInterface*> MaterialsToScan = UniqueMaterials.Array();
+    UE_LOG(LogTemp, Log, TEXT("[MaterialAudit] Found %d unique materials in level"), MaterialsToScan.Num());
 
-    for (UMaterialInterface* Mat : UniqueMaterials)
+    FScopedSlowTask SlowTask(MaterialsToScan.Num(), FText::FromString(TEXT("Scanning level materials...")));
+    SlowTask.MakeDialog(true);
+
+    for (int32 i = 0; i < MaterialsToScan.Num(); ++i)
     {
+        SlowTask.EnterProgressFrame(1.f);
+
+        UMaterialInterface* Mat = MaterialsToScan[i];
+        if (!IsValid(Mat)) continue;
+
         FMaterialAuditInfo Info;
         Info.Asset = Mat;
         Info.Path = Mat->GetPathName();
@@ -217,6 +232,7 @@ TArray<FMaterialAuditInfo> UMaterialAuditManager::GetFilteredMaterials()
         if (bPassesAll)
             Result.Add(Info);
     }
+
     UE_LOG(LogTemp, Log, TEXT("[MaterialAudit] GetFilteredMaterials: %d out of %d passed filters"), Result.Num(), Materials.Num());
     return Result;
 }
