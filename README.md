@@ -62,7 +62,7 @@ it’s already saved me hours on client projects and content cleanups.
 
 ## 📝 Roadmap
 
-- [ ] Filter by materials **in current scene** only
+- [x] Filter by materials **in current scene** only
 - [ ] Multi-selection and bulk actions
 - [ ] Advanced reporting/export
 - [ ] UI polish (search, sort, dark/light theme)
