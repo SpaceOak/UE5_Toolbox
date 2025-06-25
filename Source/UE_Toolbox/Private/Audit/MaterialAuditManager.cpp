@@ -6,14 +6,12 @@
 #include "MaterialEditingLibrary.h"
 #include "MaterialStatsCommon.h"
 #include "MaterialEditor/PreviewMaterial.h"
+#include "Misc/ScopedSlowTask.h"
 
 UMaterialAuditManager::UMaterialAuditManager()
 {
    // InitializeMaterials();
 }
-
-
-
 
 UMaterialAuditManager* UMaterialAuditManager::Instance = nullptr;
 
@@ -33,8 +31,6 @@ void UMaterialAuditManager::Initialize()
     bIsInitialized = true;
 }
 
-
-
 void UMaterialAuditManager::InitializeMaterials()
 {
     if (bIsInitialized)
@@ -44,7 +40,6 @@ void UMaterialAuditManager::InitializeMaterials()
 
     FAssetRegistryModule& AssetRegistryModule = FModuleManager::LoadModuleChecked<FAssetRegistryModule>("AssetRegistry");
 
-    // Новый UE5 способ!
     TArray<FTopLevelAssetPath> ClassPaths = {
         UMaterial::StaticClass()->GetClassPathName(),
         UMaterialInstance::StaticClass()->GetClassPathName()
@@ -56,8 +51,22 @@ void UMaterialAuditManager::InitializeMaterials()
     TArray<FAssetData> AssetDataList;
     AssetRegistryModule.Get().GetAssets(Filter, AssetDataList);
 
-    for (const FAssetData& AssetData : AssetDataList)
+#if WITH_EDITOR
+    FScopedSlowTask SlowTask(AssetDataList.Num(), FText::FromString(TEXT("Scanning materials...")));
+    SlowTask.MakeDialog(true);
+#endif
+
+    for (int32 Index = 0; Index < AssetDataList.Num(); ++Index)
     {
+#if WITH_EDITOR
+        SlowTask.EnterProgressFrame(1.f, FText::Format(
+            FText::FromString("Processing {0} of {1}"),
+            FText::AsNumber(Index + 1),
+            FText::AsNumber(AssetDataList.Num())
+        ));
+#endif
+
+        const FAssetData& AssetData = AssetDataList[Index];
         FMaterialAuditInfo Info;
 
         if (!AssetData.IsValid())
@@ -65,7 +74,7 @@ void UMaterialAuditManager::InitializeMaterials()
             UE_LOG(LogTemp, Warning, TEXT("[MaterialAuditManager] Invalid AssetData encountered"));
             continue;
         }
-        
+
         Info.Asset = AssetData.GetAsset();
         Info.Path = AssetData.GetObjectPathString();
         Info.Name = AssetData.AssetName.ToString();
@@ -76,7 +85,6 @@ void UMaterialAuditManager::InitializeMaterials()
             Info.bIsInstance = Mat->IsA<UMaterialInstance>();
             Info.Stats = UMaterialEditingLibrary::GetStatistics(Mat);
 
-            // --- Домен и шейдинг модел ---
             if (UMaterial* BaseMat = Cast<UMaterial>(Mat))
             {
                 Info.MaterialDomain = BaseMat->MaterialDomain;
@@ -84,7 +92,6 @@ void UMaterialAuditManager::InitializeMaterials()
             }
             else if (UMaterialInstance* Inst = Cast<UMaterialInstance>(Mat))
             {
-                // Для инстансов тянем из Parent
                 if (UMaterial* ParentMat = Inst->GetMaterial())
                 {
                     Info.MaterialDomain = ParentMat->MaterialDomain;
